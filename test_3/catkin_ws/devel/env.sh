@@ -14,5 +14,3 @@ CATKIN_SHELL=sh
 _CATKIN_SETUP_DIR=$(cd "`dirname "$0"`" > /dev/null && pwd)
 . "$_CATKIN_SETUP_DIR/setup.sh"
 exec "$@"
-~                                                                               
-~                           
