@@ -1,0 +1,34 @@
+<launch>
+  <arg name="use_external_renderer" default="0" />
+  <arg name="ignore_collisions" default="false" />
+  <arg name="render_stereo" default="0" />
+  <arg name="level"/>
+  <arg name="gate_locations" default="0"/>
+  <env name="CWD" value="$(env PWD)" />
+
+  <!--include core flightgoggles launch file-->
+  <include file="$(find flightgoggles)/launch/core.launch">
+    <arg name="use_external_renderer" value="$(arg use_external_renderer)"/>
+    <arg name="render_stereo" value="$(arg render_stereo)"/>
+    <arg name="ignore_collisions" value="$(arg ignore_collisions)"/>
+    <arg name="gate_locations" value="$(arg gate_locations)"/>
+  </include>
+
+  <node name="reporter" pkg="flightgoggles_reporter" type="reporter.py" output="screen" cwd='node' required="true"/>
+  <!-- Launch override settings. Must be placed at end of file to override params set in core launchfile. -->
+
+  <!--For teleoperation, run dynamics in real time-->
+  <param name="/use_sim_time" value="true" />
+  <group ns="/uav">
+    <rosparam command="load" file="$(find flightgoggles)/config/challenges/gate_locations_$(arg gate_locations).yaml"/>
+    <rosparam command="load" file="$(find flightgoggles)/config/challenges/challenge_final.yaml"/>
+  </group>
+
+    <node pkg="tf" type="static_transform_publisher" name="static_ref" args="0 0 0 0 0 0 1 world static_ref 1" />
+	<node pkg="ai" type="runner.py" name="ai"/>
+	<param name="/uav/flightgoggles_ros_bridge/image_width" value="160" />
+	<param name="/uav/flightgoggles_ros_bridge/image_height" value="120" />
+
+</launch>
+
+
