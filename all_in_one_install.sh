@@ -1,4 +1,3 @@
-
 get_auth () {
     INSTALL=0
     DEFAULT="no"
